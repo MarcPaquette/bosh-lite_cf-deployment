@@ -1,7 +1,11 @@
 #!/bin/bash -ex
 ## Install and create Bosh lite under vbox
+#requires vbox
+#requires bosh2 cli
+#requires cf cli
 
-# source for these steps: http://bosh.io/docs/bosh-lite.html
+##Create Bosh-lite
+#source for these steps: http://bosh.io/docs/bosh-lite.html
 #clone bosh-deployment
 #TODO: add check to see if it already exists
 git clone https://github.com/cloudfoundry/bosh-deployment ~/workspace/bosh-deployment
@@ -67,6 +71,8 @@ bosh -e vbox -d cf deploy ~/workspace/deployments/vbox/cf-deployment/cf-deployme
   -n
 
 #run smoketests
+bosh -e vbox -d cf run-errand smoke-tests
+bosh -e vbox -d cf run-errand smoke_tests
 
 #set env vars for cf logins
 cf login -a https://api.bosh-lite.com --skip-ssl-validation -u admin  -p `bosh int ~/workspace/deployments/vbox/cf-deployment/deployment-vars.yml  --path /cf_admin_password`
