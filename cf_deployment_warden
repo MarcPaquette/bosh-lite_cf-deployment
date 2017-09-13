@@ -46,8 +46,6 @@ bosh -e vbox env
 git clone https://github.com/cloudfoundry/cf-deployment ~/workspace/deployments/vbox/cf-deployment
 
 #edit deployment manifest 
-#reduce intsance counts to 1
-sed -i ''  's/instances: [0-9]/instances: 1/'  ~/workspace/deployments/vbox/cf-deployment/cf-deployment.yml 
 #reduce disk sizes
 #reduce memory sizes
 
@@ -61,6 +59,7 @@ bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ub
 #deploy the environment
 bosh -e vbox -d cf deploy ~/workspace/deployments/vbox/cf-deployment/cf-deployment.yml \
   -o   ~/workspace/deployments/vbox/cf-deployment/operations/bosh-lite.yml \
+  -o   ~/workspace/deployments/vbox/cf-deployment/operations/scale-to-one-az.yml \
   --vars-store   ~/workspace/deployments/vbox/cf-deployment/deployment-vars.yml \
   -v system_domain=bosh-lite.com \
   --recreate \
@@ -70,5 +69,4 @@ bosh -e vbox -d cf deploy ~/workspace/deployments/vbox/cf-deployment/cf-deployme
 #run smoketests
 
 #set env vars for cf logins
-bosh int deployment-vars.yml  --path /cf_admin_password
-
+cf login -a https://api.bosh-lite.com --skip-ssl-validation -u admin  -p `bosh int ~/workspace/deployments/vbox/cf-deployment/deployment-vars.yml  --path /cf_admin_password`
