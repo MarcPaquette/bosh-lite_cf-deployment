@@ -58,7 +58,7 @@ bosh -e vbox update-cloud-config ~/workspace/deployments/vbox/cf-deployment/bosh
 bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
 
 
-#deploy that shit
+#deploy the environment
 bosh -e vbox -d cf deploy ~/workspace/deployments/vbox/cf-deployment/cf-deployment.yml \
   -o   ~/workspace/deployments/vbox/cf-deployment/operations/bosh-lite.yml \
   --vars-store   ~/workspace/deployments/vbox/cf-deployment/deployment-vars.yml \
