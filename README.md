@@ -9,6 +9,14 @@ It requires the following:
 * [cf cli](https://docs.cloudfoundry.org/cf-cli)
 * [vbox](https://www.virtualbox.org/wiki/Downloads)
 
+You will also need to add routes for the `cf login` to work:
+```bash
+$ sudo route add -net 10.244.0.0/16     192.168.50.6 # Mac OS X
+$ sudo ip route add   10.244.0.0/16 via 192.168.50.6 # Linux (using iproute2 suite)
+$ sudo route add -net 10.244.0.0/16 gw  192.168.50.6 # Linux (using DEPRECATED route command)
+$ route add           10.244.0.0/16     192.168.50.6 # Windows
+```
+
 It's been tested under OS X, but should work other places as well.
 
 ### Usage
@@ -16,3 +24,4 @@ It's been tested under OS X, but should work other places as well.
 chmod +x ./cf_deployment_warden
 ./cf_deployment_warden
 ```
+
