@@ -25,3 +25,4 @@ chmod +x ./cf_deployment_warden
 ./cf_deployment_warden
 ```
 
+Once you have a CF foundation up and running, I *highly* recommend snapshotting the VM.
