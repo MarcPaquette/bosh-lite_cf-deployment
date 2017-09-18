@@ -82,9 +82,9 @@ bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ub
 
 #deploy the environment
 bosh -e vbox -d cf deploy $DEPLOYMENT_DIRECTORY/cf-deployment/cf-deployment.yml \
-  -o  $DEPLOYMENT_DIRECTORY/cf-deployment/operations/bosh-lite.yml \
-  -o   $DEPLOYMENT_DIRECTORY/cf-deployment/operations/scale-to-one-az.yml \
-  --vars-store  $DEPLOYMENT_DIRECTORY/cf-deployment/deployment-vars.yml \
+  -o $DEPLOYMENT_DIRECTORY/cf-deployment/operations/bosh-lite.yml \
+  -o $DEPLOYMENT_DIRECTORY/cf-deployment/operations/scale-to-one-az.yml \
+  --vars-store $DEPLOYMENT_DIRECTORY/cf-deployment/deployment-vars.yml \
   -v system_domain=bosh-lite.com \
   --recreate \
   --fix \
