@@ -5,7 +5,7 @@
 #requires cf cli
 
 
-#TODO: Set enviornment variables for installation directories
+#Set enviornment variables for installation directories
 BOSH_ENV_ALIAS=vbox 
 BOSH_LITE_DIRECTORY=~/workspace/bosh-deployment
 DEPLOYMENT_DIRECTORY=~/workspace/deployments/$BOSH_ENV_ALIAS
@@ -14,13 +14,21 @@ DEPLOYMENT_DIRECTORY=~/workspace/deployments/$BOSH_ENV_ALIAS
 ##Create Bosh-lite
 #source for these steps: http://bosh.io/docs/bosh-lite.html
 #clone bosh-deployment
-#TODO: add check to see if it already exists
-git clone https://github.com/cloudfoundry/bosh-deployment $BOSH_LITE_DIRECTORY
-
+if [ -d "$BOSH_LITE_DIRECTORY" ]
+then
+  (cd $BOSH_LITE_DIRECTORY; git pull) 
+else
+  git clone https://github.com/cloudfoundry/bosh-deployment $BOSH_LITE_DIRECTORY
+fi
 
 #set up your workspace
-#TODO: add check to see if it already exists 
-mkdir -p $DEPLOYMENT_DIRECTORY
+if [ -d "$DEPLOYMENT_DIRECTORY" ]
+then
+  echo "deployment directory exists"
+  awk '!/current_manifest_sha/' $DEPLOYMENT_DIRECTORY/state.json > temp && mv temp $DEPLOYMENT_DIRECTORY/state.json #using awk for portablity
+else
+  mkdir -p $DEPLOYMENT_DIRECTORY
+fi
 
 #edit deployment manifest
 #TODO: Raise ram
@@ -29,7 +37,7 @@ mkdir -p $DEPLOYMENT_DIRECTORY
 
 #create bosh director
 bosh create-env $BOSH_LITE_DIRECTORY/bosh.yml \
-  --state ~/workspace/deployments/vbox/state.json \
+  --state $DEPLOYMENT_DIRECTORY/state.json \
   -o $BOSH_LITE_DIRECTORY/virtualbox/cpi.yml \
   -o $BOSH_LITE_DIRECTORY/virtualbox/outbound-network.yml \
   -o $BOSH_LITE_DIRECTORY/bosh-lite.yml \
@@ -53,8 +61,13 @@ bosh -e vbox env
 
 ##Deploy cf-deployment
 #source for these steps(https://github.com/cloudfoundry/cf-deployment#deploying-cf)
-#TODO: add check to see if it already exists
-git clone https://github.com/cloudfoundry/cf-deployment $DEPLOYE?MENT_DIRECTORY/cf-deployment
+if [ -d "$DEPLOYMENT_DIRECTORY/cf-deployment" ]
+then
+  (cd  $DEPLOYMENT_DIRECTORY/cf-deployment; git pull) 
+else
+  git clone https://github.com/cloudfoundry/cf-deployment $DEPLOYMENT_DIRECTORY/cf-deployment
+fi
+
 
 #edit deployment manifest 
 #reduce disk sizes
@@ -63,7 +76,7 @@ git clone https://github.com/cloudfoundry/cf-deployment $DEPLOYE?MENT_DIRECTORY/
 #configure cloud config (this file need to be tweaked)
 bosh -e vbox update-cloud-config $DEPLOYMENT_DIRECTORY/cf-deployment/bosh-lite/cloud-config.yml -n
 
-
+#upload the latest stemcell (not 100% this is needed)
 bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
 
 
@@ -79,7 +92,7 @@ bosh -e vbox -d cf deploy $DEPLOYMENT_DIRECTORY/cf-deployment/cf-deployment.yml 
 
 #run smoketests
 bosh -e vbox -d cf run-errand smoke-tests
-bosh -e vbox -d cf run-errand smoke_tests
 
 #set env vars for cf logins
+#if this fails, you didn't set your routes 99% of the time
 cf login -a https://api.bosh-lite.com --skip-ssl-validation -u admin  -p `bosh int $DEPLOYMENT_DIRECTORY/cf-deployment/deployment-vars.yml  --path /cf_admin_password`
