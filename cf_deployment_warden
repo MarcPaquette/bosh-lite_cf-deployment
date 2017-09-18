@@ -1,5 +1,5 @@
 #!/bin/bash -ex
-## Install and create Bosh lite under vbox
+## Install and create Bosh lite under vbox then deploy cf-deployment on top of it
 #requires vbox
 #requires bosh2 cli
 #requires cf cli
