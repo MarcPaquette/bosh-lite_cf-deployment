@@ -6,9 +6,9 @@
 
 
 #TODO: Set enviornment variables for installation directories
-BOSH_ENV_ALIAS=vbox
+BOSH_ENV_ALIAS=vbox 
 BOSH_LITE_DIRECTORY=~/workspace/bosh-deployment
-DEPLOYEMENT_DIRECTORY=~/workspace/deployments/$BOSH_ENV_ALIAS
+DEPLOYMENT_DIRECTORY=~/workspace/deployments/$BOSH_ENV_ALIAS
 
 
 ##Create Bosh-lite
@@ -20,7 +20,7 @@ git clone https://github.com/cloudfoundry/bosh-deployment $BOSH_LITE_DIRECTORY
 
 #set up your workspace
 #TODO: add check to see if it already exists 
-mkdir -p $DEPLOYEMENT_DIRECTORY
+mkdir -p $DEPLOYMENT_DIRECTORY
 
 #edit deployment manifest
 #TODO: Raise ram
@@ -35,7 +35,7 @@ bosh create-env $BOSH_LITE_DIRECTORY/bosh.yml \
   -o $BOSH_LITE_DIRECTORY/bosh-lite.yml \
   -o $BOSH_LITE_DIRECTORY/bosh-lite-runc.yml \
   -o $BOSH_LITE_DIRECTORY/jumpbox-user.yml \
-  --vars-store  $DEPLOYEMENT_DIRECTORY/creds.yml \
+  --vars-store  $DEPLOYMENT_DIRECTORY/creds.yml \
   -v director_name="Bosh Lite Director" \
   -v internal_ip=192.168.50.6 \
   -v internal_gw=192.168.50.1 \
@@ -43,9 +43,9 @@ bosh create-env $BOSH_LITE_DIRECTORY/bosh.yml \
   -v outbound_network_name=NatNetwork
 
 #Set bosh log-in info
-bosh alias-env $BOSH_ENV_ALIAS -e 192.168.50.6 --ca-cert <(bosh int $DEPLOYEMENT_DIRECTORY/creds.yml --path /director_ssl/ca)
+bosh alias-env $BOSH_ENV_ALIAS -e 192.168.50.6 --ca-cert <(bosh int $DEPLOYMENT_DIRECTORY/creds.yml --path /director_ssl/ca)
 export BOSH_CLIENT=admin
-export BOSH_CLIENT_SECRET=`bosh int $DEPLOYEMENT_DIRECTORY/creds.yml --path /admin_password`
+export BOSH_CLIENT_SECRET=`bosh int $DEPLOYMENT_DIRECTORY/creds.yml --path /admin_password`
 
 
 #confirm works
@@ -54,24 +54,24 @@ bosh -e vbox env
 ##Deploy cf-deployment
 #source for these steps(https://github.com/cloudfoundry/cf-deployment#deploying-cf)
 #TODO: add check to see if it already exists
-git clone https://github.com/cloudfoundry/cf-deployment $DEPLOYEMENT_DIRECTORY/cf-deployment
+git clone https://github.com/cloudfoundry/cf-deployment $DEPLOYE?MENT_DIRECTORY/cf-deployment
 
 #edit deployment manifest 
 #reduce disk sizes
 #reduce memory sizes
 
 #configure cloud config (this file need to be tweaked)
-bosh -e vbox update-cloud-config $DEPLOYEMENT_DIRECTORY/cf-deployment/bosh-lite/cloud-config.yml -n
+bosh -e vbox update-cloud-config $DEPLOYMENT_DIRECTORY/cf-deployment/bosh-lite/cloud-config.yml -n
 
 
 bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
 
 
 #deploy the environment
-bosh -e vbox -d cf deploy $DEPLOYEMENT_DIRECTORY/cf-deployment/cf-deployment.yml \
-  -o  $DEPLOYEMENT_DIRECTORY/cf-deployment/operations/bosh-lite.yml \
-  -o   $DEPLOYEMENT_DIRECTORY/cf-deployment/operations/scale-to-one-az.yml \
-  --vars-store  $DEPLOYEMENT_DIRECTORY/cf-deployment/deployment-vars.yml \
+bosh -e vbox -d cf deploy $DEPLOYMENT_DIRECTORY/cf-deployment/cf-deployment.yml \
+  -o  $DEPLOYMENT_DIRECTORY/cf-deployment/operations/bosh-lite.yml \
+  -o   $DEPLOYMENT_DIRECTORY/cf-deployment/operations/scale-to-one-az.yml \
+  --vars-store  $DEPLOYMENT_DIRECTORY/cf-deployment/deployment-vars.yml \
   -v system_domain=bosh-lite.com \
   --recreate \
   --fix \
@@ -82,4 +82,4 @@ bosh -e vbox -d cf run-errand smoke-tests
 bosh -e vbox -d cf run-errand smoke_tests
 
 #set env vars for cf logins
-cf login -a https://api.bosh-lite.com --skip-ssl-validation -u admin  -p `bosh int $DEPLOYEMENT_DIRECTORY/cf-deployment/deployment-vars.yml  --path /cf_admin_password`
+cf login -a https://api.bosh-lite.com --skip-ssl-validation -u admin  -p `bosh int $DEPLOYMENT_DIRECTORY/cf-deployment/deployment-vars.yml  --path /cf_admin_password`
