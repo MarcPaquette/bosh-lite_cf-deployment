@@ -26,3 +26,6 @@ chmod +x ./cf_deployment_warden
 ```
 
 Once you have a CF foundation up and running, I *highly* recommend snapshotting the VM.
+
+### Notes
+Takes about 2 hours to deploy on my 2017 Macbook Pro.
