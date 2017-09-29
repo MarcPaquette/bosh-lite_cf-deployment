@@ -74,7 +74,7 @@ fi
 #reduce memory sizes
 
 #configure cloud config (this file need to be tweaked)
-bosh -e vbox update-cloud-config $DEPLOYMENT_DIRECTORY/cf-deployment/bosh-lite/cloud-config.yml -n
+bosh -e vbox update-cloud-config $DEPLOYMENT_DIRECTORY/cf-deployment/iaas-support/bosh-lite/cloud-config.yml -n
 
 #upload the latest stemcell (not 100% this is needed)
 bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
