@@ -25,9 +25,9 @@ To deploy a Bosh Lite Director and then install Cloud Foundry on it:
 ./cf_deployment_warden
 ```
 
-To source the enviornment so bosh and cf cli works use: 
+To source the environment so bosh and cf cli works use: 
 ```bash
-./set_env.sh
+source set_env.sh
 ```
 
 The files in the environment directory do the following:
