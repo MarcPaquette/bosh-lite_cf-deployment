@@ -20,8 +20,8 @@ $ route add           10.244.0.0/16     192.168.50.6 # Windows
 It's been tested under OS X, but should work other places as well.
 
 ### Usage
+To deploy a Bosh Lite Director and then install Cloud Foundry on it:
 ```bash
-chmod +x ./cf_deployment_warden
 ./cf_deployment_warden
 ```
 
