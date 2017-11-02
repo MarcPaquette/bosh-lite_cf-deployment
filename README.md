@@ -25,7 +25,18 @@ chmod +x ./cf_deployment_warden
 ./cf_deployment_warden
 ```
 
-Once you have a CF foundation up and running, I *highly* recommend snapshotting the VM.
+To source the enviornment so bosh and cf cli works use: 
+```bash
+./set_env.sh
+```
+
+The files in the environment directory do the following:
+bosh_env.sh
+  Setup the bosh and deployment directories
+bosh_login.sh
+  Log into the bosh director once it's been deployed
+cf_env.sh
+  Log into the Cloud Foundry foundation as the administrator user.
 
 ### Notes
 Takes about 2 hours to deploy on my 2017 Macbook Pro.
