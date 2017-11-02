@@ -6,10 +6,7 @@
 
 
 #Set enviornment variables for installation directories
-BOSH_ENV_ALIAS=vbox 
-BOSH_LITE_DIRECTORY=~/workspace/bosh-deployment
-DEPLOYMENT_DIRECTORY=~/workspace/deployments/$BOSH_ENV_ALIAS
-
+source ./environment/bosh_env.sh
 
 ##Create Bosh-lite
 #source for these steps: http://bosh.io/docs/bosh-lite.html
@@ -42,6 +39,8 @@ bosh create-env $BOSH_LITE_DIRECTORY/bosh.yml \
   -o $BOSH_LITE_DIRECTORY/virtualbox/outbound-network.yml \
   -o $BOSH_LITE_DIRECTORY/bosh-lite.yml \
   -o $BOSH_LITE_DIRECTORY/bosh-lite-runc.yml \
+  -o $BOSH_LITE_DIRECTORY/uaa.yml \
+  -o $BOSH_LITE_DIRECTORY/misc/config-server.yml \
   -o $BOSH_LITE_DIRECTORY/jumpbox-user.yml \
   --vars-store  $DEPLOYMENT_DIRECTORY/creds.yml \
   -v director_name="Bosh Lite Director" \
@@ -51,10 +50,7 @@ bosh create-env $BOSH_LITE_DIRECTORY/bosh.yml \
   -v outbound_network_name=NatNetwork
 
 #Set bosh log-in info
-bosh alias-env $BOSH_ENV_ALIAS -e 192.168.50.6 --ca-cert <(bosh int $DEPLOYMENT_DIRECTORY/creds.yml --path /director_ssl/ca)
-export BOSH_CLIENT=admin
-export BOSH_CLIENT_SECRET=`bosh int $DEPLOYMENT_DIRECTORY/creds.yml --path /admin_password`
-
+source ./environment/bosh_login.sh
 
 #confirm works
 bosh -e vbox env
@@ -76,7 +72,7 @@ fi
 #configure cloud config (this file need to be tweaked)
 bosh -e vbox update-cloud-config $DEPLOYMENT_DIRECTORY/cf-deployment/iaas-support/bosh-lite/cloud-config.yml -n
 
-#upload the latest stemcell (not 100% this is needed)
+#upload the latest stemcell 
 bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
 
 
@@ -95,4 +91,4 @@ bosh -e vbox -d cf run-errand smoke-tests
 
 #set env vars for cf logins
 #if this fails, you didn't set your routes 99% of the time
-cf login -a https://api.bosh-lite.com --skip-ssl-validation -u admin  -p `bosh int $DEPLOYMENT_DIRECTORY/cf-deployment/deployment-vars.yml  --path /cf_admin_password`
+source ./environment/cf_env.sh
