@@ -66,16 +66,16 @@ else
 fi
 
 
-#edit deployment manifest 
-#reduce disk sizes
-#reduce memory sizes
+#TODO: edit deployment manifest 
+#TODO: reduce disk sizes
+#TODO: reduce memory sizes
 
 #configure cloud config (this file need to be tweaked)
 bosh -e vbox update-cloud-config $DEPLOYMENT_DIRECTORY/cf-deployment/iaas-support/bosh-lite/cloud-config.yml -n
 
-#upload the latest stemcell 
-bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent
-
+#upload the latest stemcell
+CF_STEMCELL_VERSION=`bosh int$DEPLOYMENT_DIRECTORY/cf-deployment.yml --path /stemcells | grep version | cut -f2 -d\"`
+bosh -e vbox upload-stemcell https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent?v=$CF_STEMCELL_VERSION
 
 #deploy the environment
 bosh -e vbox -d cf deploy $DEPLOYMENT_DIRECTORY/cf-deployment/cf-deployment.yml \
