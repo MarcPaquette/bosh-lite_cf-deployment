@@ -29,7 +29,7 @@ fi
 
 #edit deployment manifest
 #Raise the RAM for more wiggle room
-awk '{ gsub("ram: 4096","ram: 6144"); print $0 }' $BOSH_LITE_DIRECTORY/virtualbox/cpi.yml > temp.cpi && mv temp.cpi $BOSH_LITE_DIRECTORY/virtualbox/cpi.yml 
+awk '{ gsub("memory: 4096","memory: 6144"); print $0 }' $BOSH_LITE_DIRECTORY/virtualbox/cpi.yml > temp.cpi && mv temp.cpi $BOSH_LITE_DIRECTORY/virtualbox/cpi.yml 
 #TODO: raise disk
 #TODO: Raise CPUs
 
