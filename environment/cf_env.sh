@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -exu
 
 #log into the cf deployment after it's been setup.
 #set env vars for cf logins

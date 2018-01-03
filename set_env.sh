@@ -1,4 +1,4 @@
-#!/bin/bash -ex 
+#!/bin/bash -exu 
 
 #set up env for all environments
 

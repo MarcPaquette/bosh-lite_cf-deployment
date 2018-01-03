@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -exu
 
 BOSH_ENV_ALIAS=vbox 
 BOSH_LITE_DIRECTORY=~/workspace/bosh-deployment
