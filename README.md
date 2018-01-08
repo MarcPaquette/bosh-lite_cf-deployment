@@ -8,6 +8,7 @@ It requires the following:
 * [BOSH v2 cli](https://bosh.io/docs/cli-v2.html)
 * [cf cli](https://docs.cloudfoundry.org/cf-cli)
 * [vbox](https://www.virtualbox.org/wiki/Downloads)
+* [xcode (if you are installing from OSX)](https://developer.apple.com/xcode/)
 
 You will also need to add routes for the `cf login` to work:
 ```bash
