@@ -39,7 +39,6 @@ bosh create-env $BOSH_LITE_DIRECTORY/bosh.yml \
   -o $BOSH_LITE_DIRECTORY/virtualbox/cpi.yml \
   -o $BOSH_LITE_DIRECTORY/virtualbox/outbound-network.yml \
   -o $BOSH_LITE_DIRECTORY/bosh-lite.yml \
-  -o $BOSH_LITE_DIRECTORY/bosh-lite-runc.yml \
   -o $BOSH_LITE_DIRECTORY/uaa.yml \
   -o $BOSH_LITE_DIRECTORY/misc/config-server.yml \
   -o $BOSH_LITE_DIRECTORY/jumpbox-user.yml \
@@ -55,6 +54,8 @@ source ./environment/bosh_login.sh
 
 #confirm works
 bosh -e vbox env
+
+bosh -e vbox update-runtime-config $BOSH_LITE_DIRECTORY/runtime-configs/dns.yml --vars-store $DEPLOYMENT_DIRECTORY/bosh-dns-certs.yml -n
 
 ##Deploy cf-deployment
 #source for these steps(https://github.com/cloudfoundry/cf-deployment#deploying-cf)
