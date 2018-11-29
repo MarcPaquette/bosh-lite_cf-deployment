@@ -55,6 +55,7 @@ source ./environment/bosh_login.sh
 #confirm works
 bosh -e vbox env
 
+#Enable BOSH DNS
 bosh -e vbox update-runtime-config $BOSH_LITE_DIRECTORY/runtime-configs/dns.yml --vars-store $DEPLOYMENT_DIRECTORY/bosh-dns-certs.yml -n
 
 ##Deploy cf-deployment
